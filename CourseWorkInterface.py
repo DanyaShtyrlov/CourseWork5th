@@ -20,7 +20,7 @@ database_viewport.heading("Birth_date", text="Дата рождения")
 database_viewport.heading("Study_class", text="Класс, группа")
 database_viewport.heading("Student_photo", text="Фото")
 
-database_viewport.grid(row=0, column=0, sticky=NW)
+database_viewport.grid(row=1, column=0, sticky=NW)
 
 def add_student_data_to_database():
 
@@ -55,8 +55,8 @@ def add_student_data_to_database():
     add_button = ttk.Button(add_window, text="Добавить", command=add_entry_to_student_table)
     add_button.grid(row=2, column=1)
 
-def refresh_viewport_data_with_student():
-    cursor.execute("SELECT * FROM Student")
+def refresh_viewport_data():
+    cursor.execute("SELECT * FROM {0}".format(choice_table_combobox.get()))
     student_rows = cursor.fetchall()
 
     for i in database_viewport.get_children():
@@ -65,9 +65,15 @@ def refresh_viewport_data_with_student():
     for row in student_rows:
         database_viewport.insert("", END, values=row)
 
+
+tables = ["Student", "Teacher", "Subject", "Grade"]
+take_table = StringVar(value=tables[3])
+choice_table_combobox = ttk.Combobox(textvariable=take_table, values=tables)
+choice_table_combobox.grid(row=0, column=0, sticky=W)
+
 add_button = ttk.Button(main_window, text="Добавить", command=add_student_data_to_database)
 add_button.grid(row=0, column=1, sticky=NE)
-refresh_button = ttk.Button(main_window, text="Обновить", command=refresh_viewport_data_with_student)
+refresh_button = ttk.Button(main_window, text="Обновить", command=refresh_viewport_data)
 refresh_button.grid(row=0, column=2, sticky=N)
 
 main_window.mainloop()
